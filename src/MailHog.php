@@ -431,8 +431,16 @@ class MailHog extends Module
    */
   protected function getDecodedEmailProperty($email, $property) {
     if ((string)$property != '') {
+      // Full Email Headers
       if (!empty($email->Content->Headers->{'Content-Transfer-Encoding'}) &&
         in_array('quoted-printable', $email->Content->Headers->{'Content-Transfer-Encoding'})
+      ) {
+        $property = quoted_printable_decode($property);
+      }
+
+      // MIME part Headers
+      if (!empty($email->Headers->{'Content-Transfer-Encoding'}) &&
+         in_array('quoted-printable', $email->Headers->{'Content-Transfer-Encoding'})
       ) {
         $property = quoted_printable_decode($property);
       }
